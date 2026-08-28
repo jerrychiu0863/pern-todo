@@ -6,9 +6,11 @@ const todoRouter = Router();
 // Get all todos
 todoRouter.get("/all", async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM todo");
-
-    res.json(result.rows);
+    const result = await pool.query("SELECT * FROM todo ORDER BY created_at");
+    if (result.rows !== 0) {
+      return res.json(result.rows);
+    }
+    return res.status(400).json({ msg: "Failed to fetch todos!" });
   } catch (error) {
     console.log(error);
     res.status(500).send("Database Error");
@@ -23,7 +25,7 @@ todoRouter.post("/", async (req, res) => {
       "INSERT INTO todo(description, completed) VALUES($1,$2) RETURNING *",
       [description, completed || false],
     );
-    console.log(newTodo.rows[0]);
+    // console.log(newTodo.rows[0]);
     res.json(newTodo.rows[0]);
     // res.json(newTodo);
   } catch (error) {

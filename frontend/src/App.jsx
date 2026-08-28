@@ -1,13 +1,19 @@
-import { useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 
-function App() {
-  const [count, setCount] = useState(0);
+import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
+import EditTodo from "./pages/EditTodo";
 
+function App() {
   return (
-    <>
-      <p className="text-[35px] text-red-500">REact</p>
-    </>
+    <Router>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/todo/:todo_id" element={<EditTodo />} />
+      </Routes>
+    </Router>
   );
 }
 
