@@ -9,14 +9,14 @@ function Home() {
   const [update, setUpdate] = useState("");
   const inputRef = useRef("");
   const [error, setError] = useState(null);
-
+  console.log(import.meta.env.VITE_TODO_URL);
   useEffect(() => {
     fetchTodos();
   }, []);
 
   const fetchTodos = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/todo/all");
+      const response = await axios.get(`${import.meta.env.VITE_TODO_URL}all`);
       const todos = response.data;
       setTodos(todos);
       // console.log(response.data);
@@ -29,7 +29,7 @@ function Home() {
   const onFormSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3000/todo/", {
+      const response = await axios.post(`${import.meta.env.VITE_TODO_URL}`, {
         description: inputRef.current.value,
       });
       const newTodo = response.data;
@@ -46,7 +46,7 @@ function Home() {
     const updatedDescription = type === "description" ? update : description;
     const updatedCompleted = type === "completed" ? !completed : completed;
     try {
-      await axios.put(`http://localhost:3000/todo/${todo_id}`, {
+      await axios.put(`${import.meta.env.VITE_TODO_URL}${todo_id}`, {
         description: updatedDescription,
         completed: updatedCompleted,
       });
@@ -73,7 +73,7 @@ function Home() {
     try {
       if (window.confirm("Are you sure to delete?")) {
         const response = await axios.delete(
-          `http://localhost:3000/todo/${todoId}`,
+          `${import.meta.env.VITE_TODO_URL}${todoId}`,
         );
         const updatedTodos = todos.filter((todo) => {
           if (todo.todo_id !== todoId) {
