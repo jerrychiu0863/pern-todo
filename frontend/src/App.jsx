@@ -3,7 +3,6 @@ import "./App.css";
 
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
-import EditTodo from "./pages/EditTodo";
 
 function App() {
   return (
@@ -11,7 +10,6 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/todo/:todo_id" element={<EditTodo />} />
       </Routes>
     </Router>
   );
