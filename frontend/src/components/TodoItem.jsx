@@ -5,10 +5,10 @@ function TodoItem({ todo, setError, setTodos }) {
   const [isEditing, setIsEditing] = useState(false);
   const [draftDescription, setDraftDescription] = useState(todo.description);
 
-  const onTodoUpdate = async (todoId, payload) => {
+  const updateTodo = async (todoId, payload) => {
     try {
       await todoApi.update(todoId, payload);
-      setIsEditing(false);
+
       setTodos((prev) =>
         prev.map((todo) =>
           todo.todo_id === todoId ? { ...todo, ...payload } : todo,
@@ -18,6 +18,18 @@ function TodoItem({ todo, setError, setTodos }) {
       console.log(err);
       setError("Failed to Update Todo!");
     }
+  };
+
+  const onTodoUpdate = async (todoId, payload) => {
+    if (!draftDescription || draftDescription.trim() === todo.description) {
+      // setDraftDescription(todo.description);
+      return;
+    }
+    await updateTodo(todoId, payload);
+  };
+
+  const toggleCompleted = async (todoId, payload) => {
+    await updateTodo(todoId, payload);
   };
 
   const onTodoDelete = async (todoId) => {
@@ -76,7 +88,7 @@ function TodoItem({ todo, setError, setTodos }) {
           <button
             className={`border border-gray-300 h-[30px] w-[30px] rounded-sm text-white ${todo.completed && "bg-blue-500"}`}
             onClick={() =>
-              onTodoUpdate(todo.todo_id, {
+              toggleCompleted(todo.todo_id, {
                 description: todo.description,
                 completed: !todo.completed,
               })
