@@ -1,12 +1,18 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, Navigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 
-function ProtectedRoute() {
-  return (
+function ProtectedRoute({ user, loading }) {
+  if (loading) {
+    return <div>Loading</div>;
+  }
+
+  return user ? (
     <>
       <Navbar />
       <Outlet />
     </>
+  ) : (
+    <Navigate to="/login" />
   );
 }
 

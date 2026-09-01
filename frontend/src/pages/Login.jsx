@@ -1,21 +1,27 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
-import axios from "axios";
+import { NavLink, useNavigate } from "react-router-dom";
 import { authAPi } from "../api/auth";
 
-function Login() {
+function Login({ setUser }) {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
+  const [error, setError] = useState("");
 
   const login = async (e) => {
     e.preventDefault();
+    setError("");
     try {
-      const result = await authAPi.login(form);
-      console.log(result);
+      const user = await authAPi.login(form);
+      setUser(user);
+      navigate("/");
     } catch (err) {
-      console.log(err);
+      const errRes = await err.response;
+      const errMsg = errRes.data.message;
+      setError(errMsg);
+      console.log(errMsg);
     }
   };
 
@@ -62,17 +68,20 @@ function Login() {
             required
           />
         </div>
-
+        {error && <p className="text-red-500 mb-[8px]">{error}</p>}
         <button
           type="submit"
-          className="bg-blue-500 text-white px-[16px] py-[8px] rounded-sm w-full"
+          className="bg-blue-500 text-white px-[16px] py-[8px] rounded-sm w-full mb-[8px]"
         >
           Login
         </button>
+        <p className="text-center">
+          Don't have an account? Try{" "}
+          <NavLink to="/register" className={"text-blue-500"}>
+            Register
+          </NavLink>
+        </p>
       </form>
-      <p className="text-center">
-        Don't have an account? Try <NavLink to="/register">Register</NavLink>
-      </p>
     </div>
   );
 }

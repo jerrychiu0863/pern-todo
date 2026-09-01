@@ -14,10 +14,10 @@ export const todoApi = {
     return response.data;
   },
   update: async (todoId, payload) => {
-    const reponse = await client.put(`${todoId}`, payload);
+    const reponse = await client.put(`/${todoId}`, payload);
     return reponse.data;
   },
   delete: async (todoId) => {
-    await client.delete(`${todoId}`);
+    await client.delete(`/${todoId}`);
   },
 };
