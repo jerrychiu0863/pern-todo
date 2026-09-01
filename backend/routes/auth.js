@@ -2,7 +2,7 @@ import { Router } from "express";
 import pool from "../config/db.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { protect } from "../../../pern-auth/backend/middleware/auth.js";
+import { protect } from "../middleware/auth.js";
 
 const authRouter = Router();
 const saltRounds = 10;
@@ -13,8 +13,8 @@ const cookieOptions = {
   maxAge: 30 * 24 * 60 * 60 * 1000, // 30days
 };
 
-const generateToken = (id, email) => {
-  return jwt.sign({ id, email }, process.env.JWT_SECRET, {
+const generateToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: "30d",
   });
 };
@@ -36,7 +36,7 @@ authRouter.post("/login", async (req, res) => {
         id: result.rows[0].id,
         email: result.rows[0].email,
       };
-      const token = generateToken(user.id, user.email);
+      const token = generateToken(result.rows[0].id);
       res.cookie("token", token, cookieOptions);
       res.status(201).json(user);
     } else {
@@ -63,8 +63,11 @@ authRouter.post("/register", async (req, res) => {
         "INSERT INTO users(email, password) VALUES($1, $2) RETURNING id, email",
         [email, hash],
       );
-      // const { id, email } = newUser.rows[0];
-      const token = generateToken(newUser.rows[0].id, newUser.rows[0].email);
+      const user = {
+        id: newUser.rows[0].id,
+        email: newUser.rows[0].email,
+      };
+      const token = generateToken(newUser.rows[0].id);
       res.cookie("token", token, cookieOptions);
       res.json(newUser.rows[0]);
     });
@@ -77,6 +80,12 @@ authRouter.post("/register", async (req, res) => {
 // me
 authRouter.get("/me", protect, async (req, res) => {
   res.json(req.user);
+});
+
+// Logout
+authRouter.post("/logout", async (req, res) => {
+  res.cookie("token", "", { ...cookieOptions, maxAge: 1 });
+  res.json({ message: "Logout successfully!" });
 });
 
 export default authRouter;

@@ -3,20 +3,26 @@ import pool from "../config/db.js";
 
 export const protect = async (req, res, next) => {
   try {
-    // console.log(req.cookies.token);
-    if (!req.cookies.token) {
+    const token = req.cookies.token;
+    if (!token) {
       return res.status(401).json({ message: "Not authorized!" });
     }
 
-    const decoded = jwt.verify(req.cookies.token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await pool.query("SELECT id, email FROM users WHERE id = $1", [
       decoded.id,
     ]);
-    console.log(user.rows[0]);
-    req.json(user.rows[0]);
+
+    if (user.rows.length === 0) {
+      return res.status(401).json({
+        message: "No user is found!",
+      });
+    }
+
+    req.user = user.rows[0];
     next();
   } catch (err) {
     console.log(err);
-    res.status(500).json("Database error" + err);
+    res.status(500).json("Database error : " + err);
   }
 };
