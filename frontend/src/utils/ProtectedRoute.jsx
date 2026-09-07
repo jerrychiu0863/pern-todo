@@ -7,10 +7,12 @@ function ProtectedRoute({ user, loading }) {
   }
 
   return user ? (
-    <>
+    <div className="flex h-screen">
       <Navbar />
-      <Outlet />
-    </>
+      <div className="flex-1 p-[16px]">
+        <Outlet />
+      </div>
+    </div>
   ) : (
     <Navigate to="/login" />
   );

@@ -1,6 +1,10 @@
 @import "tailwindcss";
 
 #root {
-  max-width: 80vw;
+  /* max-width: 80vw; */
+  min-height: 100vh;
   margin: 0 auto;
+  --fc-classic-small-dot-width: 0px;
+  /* --fc-classic-event: none; */
+  /* --fc-timegrid-slot-height: 50px; */
 }

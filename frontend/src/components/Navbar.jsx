@@ -1,5 +1,4 @@
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 import { authAPi } from "../api/auth";
 
 function Navbar() {
@@ -16,8 +15,18 @@ function Navbar() {
   };
 
   return (
-    <header className="bg-blue-300 px-[8px] py-[8px] flex justify-between mb-[16px]">
-      <div>MyTodo</div>
+    <header className="bg-blue-300 p-[16px] flex flex-col justify-between w-[150px]">
+      <div>
+        MyTodo
+        <nav>
+          <div>
+            <NavLink to="/">Todo</NavLink>
+          </div>
+          <div>
+            <NavLink to="/calendar">Calendar</NavLink>
+          </div>
+        </nav>
+      </div>
       <div>
         <button onClick={logout}>Logout</button>
       </div>

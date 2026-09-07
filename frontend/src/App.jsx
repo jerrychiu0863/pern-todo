@@ -4,6 +4,7 @@ import "./App.css";
 import { authAPi } from "./api/auth";
 
 import Home from "./pages/Home";
+import Calendar from "./pages/Callendar";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ProtectedRoute from "./utils/ProtectedRoute";
@@ -36,6 +37,7 @@ function App() {
         <Route path="/register" element={<Register setUser={setUser} />} />
         <Route element={<ProtectedRoute user={user} loading={loading} />}>
           <Route path="/" element={<Home />} />
+          <Route path="/calendar" element={<Calendar />} />
         </Route>
       </Routes>
     </Router>
