@@ -4,6 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import todoRouter from "./routes/todo.js";
 import authRouter from "./routes/auth.js";
+import orderRouter from "./routes/orders.js";
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.use(
 // Router
 app.use("/todo", todoRouter);
 app.use("/auth", authRouter);
+app.use("/order", orderRouter);
 
 // app.get("/:id", (req, res) => {
 //   console.log(req.params["id"]);
