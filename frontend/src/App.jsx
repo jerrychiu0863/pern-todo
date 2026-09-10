@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import "./App.css";
 import { authAPi } from "./api/auth";
 
@@ -33,9 +38,16 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={<Login setUser={setUser} />} />
+        <Route
+          path="/login"
+          element={user ? <Navigate to="/" /> : <Login setUser={setUser} />}
+        />
         <Route path="/register" element={<Register setUser={setUser} />} />
-        <Route element={<ProtectedRoute user={user} loading={loading} />}>
+        <Route
+          element={
+            <ProtectedRoute user={user} loading={loading} setUser={setUser} />
+          }
+        >
           <Route path="/" element={<Home />} />
           <Route path="/calendar" element={<Calendar />} />
         </Route>

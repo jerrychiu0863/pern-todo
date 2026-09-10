@@ -1,31 +1,17 @@
 import { useState } from "react";
-import { todoApi } from "../api/todo";
 
-function TodoItem({ todo, setError, setTodos }) {
+function TodoItem({ todo, updateTodo, deleteTodo }) {
   const [isEditing, setIsEditing] = useState(false);
   const [draftDescription, setDraftDescription] = useState(todo.description);
 
-  const updateTodo = async (todoId, payload) => {
-    try {
-      await todoApi.update(todoId, payload);
-
-      setTodos((prev) =>
-        prev.map((todo) =>
-          todo.todo_id === todoId ? { ...todo, ...payload } : todo,
-        ),
-      );
-    } catch (err) {
-      console.log(err);
-      setError("Failed to Update Todo!");
-    }
-  };
-
   const onTodoUpdate = async (todoId, payload) => {
     if (!draftDescription || draftDescription.trim() === todo.description) {
-      // setDraftDescription(todo.description);
+      setIsEditing(false);
+      setDraftDescription(todo.description);
       return;
     }
     await updateTodo(todoId, payload);
+    setIsEditing(false);
   };
 
   const toggleCompleted = async (todoId, payload) => {
@@ -33,16 +19,8 @@ function TodoItem({ todo, setError, setTodos }) {
   };
 
   const onTodoDelete = async (todoId) => {
-    try {
-      if (window.confirm("Are you sure to delete?")) {
-        await todoApi.delete(todoId);
-        setTodos((prev) => prev.filter((todo) => todo.todo_id !== todoId));
-      } else {
-        console.log("no");
-      }
-    } catch (err) {
-      console.log(err);
-      setError("Failed to delete Todo!");
+    if (window.confirm("Are you sure to delete?")) {
+      await deleteTodo(todoId);
     }
   };
 
@@ -65,14 +43,16 @@ function TodoItem({ todo, setError, setTodos }) {
                 description: draftDescription,
                 completed: todo.completed,
               });
-              setIsEditing(false);
             }}
           >
             Save
           </button>
           <button
             className="border border-red-500 text-red-500 px-[16px] py-[8px] rounded-sm"
-            onClick={() => setIsEditing(false)}
+            onClick={() => {
+              setDraftDescription(todo.description);
+              setIsEditing(false);
+            }}
           >
             Cancel
           </button>

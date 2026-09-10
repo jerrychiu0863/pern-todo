@@ -1,20 +1,14 @@
 import { useRef } from "react";
-import { todoApi } from "../api/todo";
 
-function TodoForm({ setTodos, setError }) {
+function TodoForm({ addTodo }) {
   const inputRef = useRef();
 
   const onFormSubmit = async (e) => {
     e.preventDefault();
     const description = inputRef.current.value;
-    try {
-      const newTodo = await todoApi.create(description);
-      setTodos((todos) => [...todos, newTodo]);
-      inputRef.current.value = "";
-    } catch (err) {
-      console.log(err);
-      setError("Failed to add new task!");
-    }
+
+    await addTodo(description);
+    inputRef.current.value = "";
   };
 
   return (
